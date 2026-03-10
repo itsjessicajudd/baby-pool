@@ -3,11 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baby Guess</title>
+  <title>BabyPool 🍼</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Baby Guess</h1>
+
+  <!-- Gear button (fixed top-left) -->
+  <button id="admin-toggle" class="gear-btn" title="Admin Settings" aria-label="Admin Settings">⚙</button>
+
+  <!-- Admin drawer overlay -->
+  <div id="admin-overlay" class="admin-overlay"></div>
+
+  <!-- Admin drawer -->
+  <aside id="admin-panel" class="admin-drawer">
+    <div class="admin-drawer-header">
+      <span>Admin</span>
+      <button id="admin-close" class="admin-close" aria-label="Close">✕</button>
+    </div>
+
+    <div class="admin-section">
+      <label class="admin-label" for="admin-due-date">Due Date</label>
+      <div class="admin-inline">
+        <input type="date" id="admin-due-date" />
+        <button class="btn-secondary btn-sm" id="save-due-date">Save</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <p class="admin-section-title">Reveal Results</p>
+      <div class="form-row">
+        <label for="actual-date">Birth Date</label>
+        <input type="date" id="actual-date" />
+      </div>
+      <div class="form-row">
+        <label>Actual Weight</label>
+        <div class="weight-inputs">
+          <input type="number" id="actual-weight-lbs" min="4" max="12" step="1" placeholder="lbs" />
+          <span>lbs</span>
+          <input type="number" id="actual-weight-oz" min="0" max="15" step="1" placeholder="oz" />
+          <span>oz</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="actual-gender">Gender</label>
+        <select id="actual-gender">
+          <option value="">-- Select --</option>
+          <option value="boy">Boy 💙</option>
+          <option value="girl">Girl 💗</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="actual-name">Baby's Name</label>
+        <input type="text" id="actual-name" placeholder="e.g. Oliver" autocomplete="off" />
+      </div>
+      <button class="btn-primary btn-full" id="reveal-winner">🎉 Reveal Winner</button>
+    </div>
+
+    <div class="admin-section">
+      <button class="btn-outline btn-full" id="load-mock">↺ Load Sample Guesses</button>
+    </div>
+
+    <div class="admin-section">
+      <button class="btn-danger btn-full" id="undo-reveal">↩ Undo Reveal</button>
+      <button class="btn-danger btn-full mt-sm" id="clear-all">🗑 Clear All Guesses</button>
+    </div>
+  </aside>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">🍼</div>
+      <h1>BabyPool</h1>
+      <p class="tagline">Place your bets on when the little one arrives</p>
+      <div class="due-date-pill">
+        <span>Due</span>
+        <strong id="due-date-display"></strong>
+      </div>
+      <div id="countdown" class="countdown"></div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Guess Form -->
+    <section class="card form-section">
+      <h2>Make Your Guess</h2>
+      <form id="guess-form">
+
+        <div class="form-row">
+          <label for="guesser-name">Your Name *</label>
+          <input type="text" id="guesser-name" required placeholder="Enter your name" autocomplete="off" />
+        </div>
+
+        <div class="form-2col">
+          <div class="form-row">
+            <label for="date-guess">Arrival Date *</label>
+            <input type="date" id="date-guess" required />
+          </div>
+          <div class="form-row">
+            <label>Weight Guess</label>
+            <div class="weight-inputs">
+              <input type="number" id="weight-lbs" min="4" max="12" step="1" placeholder="lbs" />
+              <span>lbs</span>
+              <input type="number" id="weight-oz" min="0" max="15" step="1" placeholder="oz" />
+              <span>oz</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Gender Prediction</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="gender" value="boy" /> Boy 💙</label>
+            <label class="radio-label"><input type="radio" name="gender" value="girl" /> Girl 💗</label>
+            <label class="radio-label"><input type="radio" name="gender" value="surprise" checked /> Surprise 🎀</label>
+          </div>
+        </div>
+
+        <details class="extras-details">
+          <summary>+ Bonus guesses — name &amp; time of birth</summary>
+          <div class="extras">
+            <div class="form-row">
+              <label for="time-guess">Time of Birth</label>
+              <select id="time-guess">
+                <option value="">-- Select a time --</option>
+                <option value="midnight">🌙 Midnight (12am–3am)</option>
+                <option value="earlymorning">🌄 Early Morning (3am–6am)</option>
+                <option value="morning">☀️ Morning (6am–12pm)</option>
+                <option value="afternoon">🌤 Afternoon (12pm–6pm)</option>
+                <option value="evening">🌆 Evening (6pm–9pm)</option>
+                <option value="night">🌃 Night (9pm–12am)</option>
+              </select>
+            </div>
+            <div class="form-2col">
+              <div class="form-row">
+                <label for="boy-name">Boy Name Guess</label>
+                <input type="text" id="boy-name" placeholder="e.g. Oliver" autocomplete="off" />
+              </div>
+              <div class="form-row">
+                <label for="girl-name">Girl Name Guess</label>
+                <input type="text" id="girl-name" placeholder="e.g. Emma" autocomplete="off" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <button type="submit" class="btn-primary btn-submit">Submit Guess 🍼</button>
+
+      </form>
+    </section>
+
+    <!-- Stats -->
+    <section class="card stats-section">
+      <h2>Stats <span id="stats-count" class="badge">0</span></h2>
+      <div id="stats-content"></div>
+    </section>
+
+    <!-- Guesses List -->
+    <section class="guesses-section">
+      <div class="guesses-header">
+        <h2>All Guesses <span id="guess-count" class="badge">0</span></h2>
+        <div id="reveal-banner" class="reveal-banner hidden"></div>
+      </div>
+      <div id="guesses-list" class="guesses-list">
+        <p class="empty-state">No guesses yet — be the first! 🐣</p>
+      </div>
+    </section>
+
+  </main>
+
   <script src="app.js"></script>
 </body>
 </html>
