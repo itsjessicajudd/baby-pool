@@ -139,15 +139,14 @@ function updateCountdown() {
 // ---------------------------------------------------------------------------
 
 function renderGenderChart(guesses) {
-  const c = { boy: 0, girl: 0, surprise: 0 };
+  const c = { boy: 0, girl: 0 };
   guesses.forEach(g => { if (c[g.gender] !== undefined) c[g.gender]++; });
-  const total = c.boy + c.girl + c.surprise;
+  const total = c.boy + c.girl;
   if (total === 0) return '<p class="no-data">No data yet</p>';
 
   const segs = [
-    { key: 'boy',      count: c.boy,      color: '#60a5fa', label: '💙 Boy' },
-    { key: 'girl',     count: c.girl,     color: '#f472b6', label: '💗 Girl' },
-    { key: 'surprise', count: c.surprise, color: '#a78bfa', label: '🎀 Surprise' },
+    { key: 'boy',  count: c.boy,  color: '#60a5fa', label: '💙 Boy' },
+    { key: 'girl', count: c.girl, color: '#f472b6', label: '💗 Girl' },
   ];
 
   const r = 36, cx = 50, cy = 50;
@@ -507,7 +506,7 @@ document.getElementById('guess-form').addEventListener('submit', e => {
   state.guesses.push({
     id: Date.now(),
     name, date,
-    gender:    document.querySelector('input[name="gender"]:checked')?.value || 'surprise',
+    gender:    document.querySelector('input[name="gender"]:checked')?.value || null,
     boyName:   document.getElementById('boy-name').value.trim(),
     girlName:  document.getElementById('girl-name').value.trim(),
     weightLbs: lbsVal !== '' ? parseInt(lbsVal, 10) : null,
@@ -518,7 +517,6 @@ document.getElementById('guess-form').addEventListener('submit', e => {
   saveState();
   render();
   e.target.reset();
-  document.querySelector('input[name="gender"][value="surprise"]').checked = true;
   document.querySelector('.extras-details').removeAttribute('open');
   document.querySelector('.stats-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
